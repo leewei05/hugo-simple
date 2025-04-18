@@ -9,8 +9,10 @@
     {{ if or .Paginator.HasPrev .Paginator.HasNext }}
       {{- partial "pagination.html" . -}}
     {{ end }}
+
+    <h3>English Posts</h3>
     <ul class="blog-posts">
-      {{ range .Paginator.Pages }}
+      {{ range where .Paginator.Pages "Params.lang" "en" }}
         <li>
           <span>
             <i>
@@ -29,6 +31,29 @@
         <li>No posts yet</li>
       {{ end }}
     </ul>
+
+    <h3>中文部落格</h3>
+    <ul class="blog-posts">
+      {{ range where .Paginator.Pages "Params.lang" "zh" }}
+        <li>
+          <span>
+            <i>
+              <time datetime="{{ .Date.Format "2006-01-02" }}" pubdate>
+                {{ .Date.Format (default "2006-01-02" .Site.Params.dateFormat) }}
+              </time>
+            </i>
+          </span>
+          {{ if .Params.link }}
+            <a href="{{ .Params.link }}" target="_blank">{{ .Title }} ↪</a>
+          {{ else }}
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{ end }}
+        </li>
+      {{ else }}
+        <li>No posts yet</li>
+      {{ end }}
+    </ul>
+
     {{ if not .Data.Singular }}
       <small>
         <div>
@@ -40,3 +65,4 @@
     {{ end }}
   </content>
 {{ end }}
+
